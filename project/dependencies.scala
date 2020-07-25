@@ -90,23 +90,28 @@ object dependencies extends AutoPlugin {
     "org.scalacheck" %% "scalacheck"  % "1.14.3"
   )
 
+  private val kotlin = Seq(
+    "com.novocode"         % "junit-interface"     % "0.11"  % Test,
+    "com.fasterxml.uuid"   % "java-uuid-generator" % "4.0"   % Test
+  )
+
   override def trigger: PluginTrigger = allRequirements
 
   override def requires: Plugins = JvmPlugin
 
   override def projectSettings: Seq[Def.Setting[_]] =
     Seq(
-      libraryDependencies ++= common ++ parallel.value,
       libraryDependencies ++= {
         projectID.value.name match {
-          case "documentation"       => documentation
-          case "microsite"           => documentation
-          case "memeid4s-cats"       => cats.value
-          case "memeid4s-literal"    => literal.value
-          case "memeid4s-doobie"     => doobie.value
-          case "memeid4s-circe"      => circe.value
-          case "memeid4s-http4s"     => http4s.value
-          case "memeid4s-scalacheck" => scalacheck
+          case "documentation"       => common ++ parallel.value ++ documentation
+          case "microsite"           => common ++ parallel.value ++ documentation
+          case "memeid4s-cats"       => common ++ parallel.value ++ cats.value
+          case "memeid4s-literal"    => common ++ parallel.value ++ literal.value
+          case "memeid4s-doobie"     => common ++ parallel.value ++ doobie.value
+          case "memeid4s-circe"      => common ++ parallel.value ++ circe.value
+          case "memeid4s-http4s"     => common ++ parallel.value ++ http4s.value
+          case "memeid4s-scalacheck" => common ++ parallel.value ++ scalacheck
+          case "memeid-kotlin"       => kotlin
           case _                     => Nil
         }
       }
